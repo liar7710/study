@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--    <bean id="databaseIdProvider" class="org.apache.ibatis.mapping.VendorDatabaseIdProvider">-->
+    <!--        <property name="properties">-->
+    <!--            <props>-->
+    <!--                <prop key="MySQL">mysql</prop>-->
+    <!--            </props>-->
+    <!--        </property>-->
+    <!--    </bean>-->
+
+    <!--    SqlSessionFactoryBean 实现了 Spring 的 FactoryBean 接口，这意味着由 Spring 最终创建的 bean 并不是 SqlSessionFactoryBean 本身，而是工厂类（SqlSessionFactoryBean）的 getObject() 方法的返回结果-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="shardingDataSource"/>
+        <property name="mapperLocations" value="classpath*:simple/xml/**/*.xml"/>
+        <!--        <property name="databaseIdProvider" ref="databaseIdProvider"/>-->
+        <property name="configuration">
+            <bean class="org.apache.ibatis.session.Configuration">
+                <property name="cacheEnabled" value="true"/>
+
+                <property name="mapUnderscoreToCamelCase" value="true"/>
+
+                <property name="defaultExecutorType" value="REUSE"/>
+                <property name="localCacheScope" value="SESSION"/>
+
+                <property name="logImpl" value="org.apache.ibatis.logging.log4j2.Log4j2Impl"/>
+                <property name="vfsImpl" value="org.apache.ibatis.io.DefaultVFS"/>
+
+                <property name="autoMappingBehavior" value="PARTIAL"/>
+                <property name="autoMappingUnknownColumnBehavior" value="WARNING"/>
+
+                <property name="defaultStatementTimeout" value="50"/>
+                <property name="defaultFetchSize" value="100"/>
+
+                <property name="defaultResultSetType" value="DEFAULT"/>
+
+                <property name="safeResultHandlerEnabled" value="true"/>
+                <property name="safeRowBoundsEnabled" value="true"/>
+            </bean>
+        </property>
+        <property name="plugins">
+            <list>
+                <bean id="myInterceptor" class="aspcetClass.MyInterceptor"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="shardingDataSource"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager" mode="aspectj" proxy-target-class="true"/>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="shardingDataSource"/>
+    </bean>
+
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+    <bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+
+        <bean id="pagingItemReader" class="org.mybatis.spring.batch.MyBatisPagingItemReader">
+            <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+        </bean>
+    <!--    <bean id="cursorItemReader" class="org.mybatis.spring.batch.MyBatisCursorItemReader">-->
+    <!--        <property name="sqlSessionFactory" ref="sqlSessionFactory" />-->
+    <!--    </bean>-->
+    <!--    <bean id="batchItemWriter" class="org.mybatis.spring.batch.MyBatisBatchItemWriter">-->
+    <!--        <property name="sqlSessionFactory" ref="sqlSessionFactory" />-->
+    <!--    </bean>-->
+
+    <bean id="simplebBizMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="simple.dao.EcoFegwBizMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+    <bean id="simpleModuleMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="simple.dao.EcoFegwModuleMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+    <bean id="simpleH5Mapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="simple.dao.EcoFegwH5Mapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+    <bean id="simplePageMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="simple.dao.EcoFegwPageMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+    <bean id="simpleUUIDMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="simple.dao.UUIDMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+    <bean id="dynamicBizMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="dynamic.dao.EcoFegwBizMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+    <bean id="dynamicModuleMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="dynamic.dao.EcoFegwModuleMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+    <bean id="dynamicH5Mapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="dynamic.dao.EcoFegwH5Mapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+    <bean id="dynamicPageMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="dynamic.dao.EcoFegwPageMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+</beans>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:cache="http://www.springframework.org/schema/cache" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="caffeine.properties"/>
+    <context:property-placeholder location="dataSource.properties"/>
+    <bean id="cacheManager" class="org.springframework.cache.caffeine.CaffeineCacheManager">
+        <property name="cacheNames">
+            <set>
+                <value>H5</value>
+                <value>Page</value>
+                <value>Biz</value>
+                <value>Module</value>
+                <value>cacheTest</value>
+            </set>
+        </property>
+        <property name="allowNullValues" value="true"/>
+        <property name="cacheSpecification" value="${cacheConfig}"/>
+    </bean>
+    <cache:annotation-driven cache-manager="cacheManager" proxy-target-class="true"/>
+
+    <bean id="cache" class="cacheM.SpringCacheBean"/>
+    <bean id="db" class="java.util.concurrent.ConcurrentHashMap"/>
+
+    <bean id="h5Loader" class="loader.EcofegwH5Loader"/>
+    <bean id="h5LoadingCache" class="CacheM1.LoadingCacheFactory">
+        <property name="config" value="${loadingCacheConfig}"/>
+        <property name="loader" ref="h5Loader"/>
+    </bean>
+    <bean id="h5Cache" class="CacheM1.CacheFactory">
+        <property name="config" value="${cacheConfig}"/>
+    </bean>
+
+    <bean id="corsFilter" class="aspcetClass.myCorsFilter"/>
+</beans>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+<!--    <context id="DynamicTables" targetRuntime="MyBatis3DynamicSql">-->
+<!--        <connectionFactory>-->
+<!--            <property name="driverClass" value="com.mysql.cj.jdbc.Driver"/>-->
+<!--            <property name="connectionURL" value="jdbc:mysql://10.222.99.249:3306/eco_gateway"/>-->
+<!--            <property name="userId" value="root"/>-->
+<!--            <property name="password" value="JRTEST"/>-->
+<!--        </connectionFactory>-->
+<!--        <javaTypeResolver>-->
+<!--            <property name="forceBigDecimals" value="false" />-->
+<!--            <property name="useJSR310Types" value="false"/>-->
+<!--        </javaTypeResolver>-->
+<!--        <javaModelGenerator targetPackage="dynamic.model" targetProject="src/main/java">-->
+<!--            <property name="constructorBased" value="true"/>-->
+<!--            <property name="enableSubPackages" value="true" />-->
+<!--            <property name="trimStrings" value="true" />-->
+<!--            <property name="exampleTargetPackage" value="dao.example"/>-->
+<!--            <property name="exampleTargetProject" value="src/main/java"/>-->
+<!--        </javaModelGenerator>-->
+<!--        <javaClientGenerator type="XMLMAPPER" targetPackage="dynamic.dao"  targetProject="src/main/java">-->
+<!--            <property name="enableSubPackages" value="true" />-->
+<!--        </javaClientGenerator>-->
+<!--        <table tableName="eco_fegw_h5"/>-->
+<!--        <table tableName="eco_fegw_page"/>-->
+<!--        <table tableName="eco_fegw_biz"/>-->
+<!--        <table tableName="eco_fegw_module"/>-->
+<!--    </context>-->
+    <context id="SampleTables" targetRuntime="MyBatis3Simple">
+        <connectionFactory>
+            <property name="driverClass" value="com.mysql.cj.jdbc.Driver"/>
+            <property name="connectionURL" value="jdbc:mysql://10.222.99.249:3306/eco_gateway"/>
+            <property name="userId" value="root"/>
+            <property name="password" value="JRTEST"/>
+        </connectionFactory>
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false" />
+            <property name="useJSR310Types" value="false"/>
+        </javaTypeResolver>
+        <javaModelGenerator targetPackage="simple.model" targetProject="src/main/java">
+            <property name="constructorBased" value="true"/>
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+            <property name="exampleTargetPackage" value="sample.example"/>
+            <property name="exampleTargetProject" value="src/main/java"/>
+        </javaModelGenerator>
+        <sqlMapGenerator targetPackage="simple.xml"  targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
+        <javaClientGenerator type="XMLMAPPER" targetPackage="simple.dao"  targetProject="src/main/java">
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+        <table tableName="eco_fegw_h5" >
+        </table>
+        <table tableName="eco_fegw_page">
+        </table>
+        <table tableName="eco_fegw_biz">
+        </table>
+        <table tableName="eco_fegw_module">
+        </table>
+    </context>
+</generatorConfiguration>

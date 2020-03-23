@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:orchestraion="http://shardingsphere.apache.org/schema/shardingsphere/orchestration"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://shardingsphere.apache.org/schema/shardingsphere/orchestration
+                           http://shardingsphere.apache.org/schema/shardingsphere/orchestration/orchestration.xsd">
+    <import resource="sharding.xml"/>
+    <orchestraion:registry-center id="regCenter" type="zookeeper" server-lists="localhost:3181"
+                                  namespace="orchestration-spring-namespace-test" operation-timeout-milliseconds="1000"
+                                  max-retries="3"/>
+    <orchestraion:sharding-data-source id="simpleShardingOrchestration" data-source-ref="simpleShardingDataSource"
+                                       registry-center-ref="regCenter"/>
+</beans>

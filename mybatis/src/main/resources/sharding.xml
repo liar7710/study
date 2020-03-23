@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:sharding="http://shardingsphere.apache.org/schema/shardingsphere/sharding"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://shardingsphere.apache.org/schema/shardingsphere/sharding
+                        http://shardingsphere.apache.org/schema/shardingsphere/sharding/sharding.xsd">
+
+    <bean id="ds0_m" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <property name="username" value="${userName}"/>
+        <property name="password" value="${passWord}"/>
+        <property name="url" value="${url0}"/>
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="connectionProperties" value="${connectionProperties}"/>
+    </bean>
+    <bean id="ds0_s" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <property name="username" value="${userName}"/>
+        <property name="password" value="${passWord}"/>
+        <property name="url" value="${url1}"/>
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="connectionProperties" value="${connectionProperties}"/>
+    </bean>
+    <bean id="ds1_m" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <property name="username" value="${userName}"/>
+        <property name="password" value="${passWord}"/>
+        <property name="url" value="${url2}"/>
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="connectionProperties" value="${connectionProperties}"/>
+    </bean>
+
+    <bean id="ds1_s" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <property name="username" value="${userName}"/>
+        <property name="password" value="${passWord}"/>
+        <property name="url" value="${url3}"/>
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="connectionProperties" value="${connectionProperties}"/>
+    </bean>
+
+    <sharding:inline-strategy id="inlineStrategy_ds" sharding-column="id" algorithm-expression="ds$->{id % 2}"/>
+    <sharding:inline-strategy id="inlineStrategy_tb" sharding-column="id" algorithm-expression="ds$->{id % 10}"/>
+
+    <!--    <sharding:standard-strategy id="preciseStrategy" sharding-column="" precise-algorithm-ref="strategy.preciseStrategy" range-algorithm-ref="strategy.rangeStrategy"/>-->
+    <!--    <sharding:hint-strategy id="hintStrategy" algorithm-ref="strategy.hintStrategy"/>-->
+    <!--    <sharding:complex-strategy id="complexStrategy" sharding-columns="id" algorithm-ref="strategy.complexStrategy"/>-->
+    <sharding:key-generator id="keyGenerator1" type="SNOWFLAKE" column="id"/>
+    <sharding:key-generator id="keyGenerator2" type="SNOWFLAKE" column="id"/>
+    <sharding:data-source id="shardingDataSource">
+        <sharding:sharding-rule data-source-names="ds0_m,ds1_m,ds0_s,ds1_s">
+            <sharding:master-slave-rules>
+                <sharding:master-slave-rule id="ds0" master-data-source-name="ds0_m" slave-data-source-names="ds0_s"/>
+                <sharding:master-slave-rule id="ds1" master-data-source-name="ds1_m" slave-data-source-names="ds1_s"/>
+            </sharding:master-slave-rules>
+            <sharding:table-rules>
+                <sharding:table-rule logic-table="merchant" actual-data-nodes="ds$->{0..1}.merchant"
+                                     database-strategy-ref="inlineStrategy_ds" table-strategy-ref="inlineStrategy_tb"
+                                     key-generator-ref="keyGenerator1"/>
+            </sharding:table-rules>
+            <!--            <sharding:encrypt-rule>-->
+            <!--                <encryptors>-->
+            <!--                    <encryptor id="" type=""/>-->
+            <!--                </encryptors>-->
+            <!--                <tables>-->
+            <!--                    <table name="">-->
+            <!--                        <column logic-column="" cipher-column="" encryptor-ref=""/>-->
+            <!--                    </table>-->
+            <!--                </tables>-->
+            <!--            </sharding:encrypt-rule>-->
+            <!--            <sharding:master-slave-rules>-->
+            <!--                <sharding:master-slave-rule id="" master-data-source-name="" slave-data-source-names=""/>-->
+            <!--            </sharding:master-slave-rules>-->
+            <!--            <sharding:binding-table-rules>-->
+            <!--                <sharding:binding-table-rule logic-tables=""/>-->
+            <!--            </sharding:binding-table-rules>-->
+            <!--            <sharding:broadcast-table-rules>-->
+            <!--                <sharding:broadcast-table-rule table=""/>-->
+            <!--            </sharding:broadcast-table-rules>-->
+        </sharding:sharding-rule>
+    </sharding:data-source>
+</beans>
