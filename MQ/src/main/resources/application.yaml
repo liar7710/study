@@ -1,0 +1,10 @@
+spring:
+  rabbitmq:
+    addresses:
+    port:
+    username:
+    password:
+    template:
+      retry:
+        initial-interval: 2s
+        enabled: true
