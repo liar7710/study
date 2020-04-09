@@ -1,0 +1,38 @@
+server:
+  undertow:
+    allow-encoded-slash: true
+    direct-buffers: true
+    buffer-size: 262144
+    io-threads: 200
+    worker-threads: 200
+  port: 8081
+  compression:
+    enabled: true
+  http2:
+    enabled: true
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/db
+    username: root
+    password: wh960903
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+  jpa:
+    database: MySQL
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+    generate-ddl: false
+    hibernate:
+      ddl-auto: update
+  mvc:
+    message-codes-resolver-format: postfix_error_code
+  security:
+    .
+  session:
+    store-type: redis
+  redis:
+    cluster:
+      nodes:
+        - 127.0.0.1:6379
+logging:
+  config: classpath:log4j2.xml
